@@ -34,6 +34,11 @@
             <artifactId>core</artifactId>
             <version>3.5.1</version> <!-- 确保最新 -->
         </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
+        </dependency>
         <!-- 现有依赖 -->
         
         <!-- 添加 MySQL 依赖 -->

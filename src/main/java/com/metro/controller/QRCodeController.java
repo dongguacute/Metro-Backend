@@ -54,18 +54,28 @@ public class QRCodeController {
             return null;
         }
         String[] parts = qrContent.split("_");
-        if (parts.length < 4) {  // 修正：从 200 改为 4，因为格式是 METRO_USER_U2023001_1739798106782
+        if (parts.length < 6) {  // 增加 nonce 验证
             return null;
         }
         
         try {
-            // 检查时间戳
+            String userId = parts[2];
             long timestamp = Long.parseLong(parts[3]);
+            String nonce = parts[4];
+            String signature = parts[5];
             long currentTime = System.currentTimeMillis();
-            if (currentTime - timestamp > 3000) {  // 3秒超时
+            
+            // 验证时间戳
+            if (currentTime - timestamp > 3000) {
                 throw new IllegalArgumentException("二维码已过期");
             }
-            return parts[2];
+            
+            // 验证签名
+            if (!qrCodeService.verifySignature(userId, timestamp, nonce, signature)) {
+                throw new IllegalArgumentException("二维码签名无效");
+            }
+            
+            return userId;
         } catch (NumberFormatException e) {
             return null;
         }
